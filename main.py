@@ -30,9 +30,15 @@ the baseline's because these prices move less over four hours than a
 import json
 import math
 import os
+import sys
 
-Z = [-1.644854, -0.67449, 0.0, 0.67449, 1.644854]
-QUANTILES = [0.05, 0.25, 0.5, 0.75, 0.95]
+
+def _fail(msg):
+    print(msg, file=sys.stderr)
+    raise SystemExit(1)
+
+Z = [-1.644854, -0.67449, 0.0, 0.67449, 1.644854]  # normal quantiles
+QUANTILES = [0.05, 0.25, 0.5, 0.75, 0.95]  # matching levels, in order
 # Fixed spread, tuned on the practice cases (0.0015 scored 0.4166, 0.0018
 # scored 0.4180, 0.0025 baseline 0.4296). 0.0018 chosen: near-optimal
 # while staying close to the baseline's behaviour on unseen cases.
