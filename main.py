@@ -51,7 +51,12 @@ def price6(x):
 
 
 def forecast_market(prices, horizon):
-    """One market's quantiles: median = last price, spread ~ sqrt(h)."""
+    """One market's quantiles: median = last price, spread ~ sqrt(h).
+
+    The spread grows with the square root of the horizon, as a random
+    walk's would: after h minutes the price has had h chances to move,
+    so its typical displacement scales like sqrt(h).
+    """
     if not prices:
         return [[0.5] * len(Z) for _ in range(horizon)]
     x = prices[-1]
