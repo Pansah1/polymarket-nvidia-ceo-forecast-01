@@ -6,10 +6,10 @@ minute for the 72 hours up to a checkpoint) and writes, for each market and
 each of the 240 minutes after the checkpoint, five quantiles (5/25/50/75/95%)
 of that minute's price.
 
-Method: the house baseline's persistence forecast -- the price stays where
-it was, with a spread widening like a random walk's -- but with the spread
-tuned on the practice cases instead of the baseline's fixed 0.0025. Two
-things the practice data showed:
+Method: a persistence forecast -- the price stays where it was, with a
+spread widening like a random walk's -- but with the spread tuned on the
+practice cases instead of the baseline's fixed 0.0025. Two things the
+practice data showed:
 
 - The median belongs at the last price. Pulling it toward a longer-term
   mean (mean reversion) made the loss much worse at every weight tried:
@@ -40,10 +40,14 @@ SIGMA = 0.0018
 
 
 def price6(x):
+    """Clamp to [0, 1] and round to 6 decimals (the output precision)."""
     return round(min(1.0, max(0.0, x)) * 1e6) / 1e6 + 0.0
 
 
 def forecast_market(prices, horizon):
+    """One market's quantiles: median = last price, spread ~ sqrt(h)."""
+    if not prices:
+        return [[0.5] * len(Z) for _ in range(horizon)]
     x = prices[-1]
     rows = []
     for h in range(1, horizon + 1):
@@ -53,6 +57,7 @@ def forecast_market(prices, horizon):
 
 
 def main():
+    """Read every *.in case, write a *.out forecast per case."""
     in_dir = os.environ.get("MAKEFUN_INPUT_DIR", "/input")
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
@@ -65,8 +70,11 @@ def main():
         horizon = case.get("horizon_minutes", 240)
         forecasts = []
         for m in case["markets"]:
-            forecasts.append({"id": m["id"], "q": forecast_market(m["prices"], horizon)})
-        with open(os.path.join(out_dir, cid + ".out"), "w") as f:
+            forecasts.append(
+                {"id": m["id"], "q": forecast_market(m["prices"], horizon)}
+            )
+        out_path = os.path.join(out_dir, cid + ".out")
+        with open(out_path, "w") as f:
             f.write(json.dumps({"forecasts": forecasts}) + "\n")
 
 
