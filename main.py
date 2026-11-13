@@ -33,6 +33,9 @@ import os
 
 Z = [-1.644854, -0.67449, 0.0, 0.67449, 1.644854]
 QUANTILES = [0.05, 0.25, 0.5, 0.75, 0.95]
+# Fixed spread, tuned on the practice cases (0.0015 scored 0.4166, 0.0018
+# scored 0.4180, 0.0025 baseline 0.4296). 0.0018 chosen: near-optimal
+# while staying close to the baseline's behaviour on unseen cases.
 SIGMA = 0.0018
 
 
