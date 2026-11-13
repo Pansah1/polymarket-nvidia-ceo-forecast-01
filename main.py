@@ -46,7 +46,10 @@ SIGMA = 0.0018
 
 
 def price6(x):
-    """Clamp to [0, 1] and round to 6 decimals (the output precision)."""
+    """Clamp to [0, 1] and round to 6 decimals (the output precision).
+
+    The + 0.0 normalises -0.0 to 0.0 so no output row ever reads -0.0.
+    """
     return round(min(1.0, max(0.0, x)) * 1e6) / 1e6 + 0.0
 
 
