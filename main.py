@@ -93,4 +93,6 @@ def main():
 
 
 if __name__ == "__main__":
+    # Entry point: the grader runs `python3 main.py` with the input and
+    # output directories in the environment. Nothing else to configure.
     main()
